@@ -1,0 +1,87 @@
+group = project_group
+version = project_version
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.compile
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        version true
+    }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id dev_id
+            name dev_name
+            email dev_email
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project_artifact_id
+
+            pom{
+                packaging 'aar'
+            }
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', project_desc)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintray_user
+    key = bintray_apikey
+
+    configurations = ['archives']
+    publications = ['mavenJava']
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        name = project_name
+        desc = project_desc
+        websiteUrl = project_website_url
+        issueTrackerUrl = project_issue_url
+        vcsUrl = project_vcs_url
+        licenses = ['Apache-2.0']
+        publicDownloadNumbers = true
+    }
+}

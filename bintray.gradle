@@ -1,5 +1,5 @@
-group = project.group
-version = project.version
+group = proj_group
+version = proj_version
 
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
@@ -42,9 +42,9 @@ def pomConfig = {
     }
     developers {
         developer {
-            id dev.id
-            name dev.name
-            email dev.email
+            id dev_id
+            name dev_name
+            email dev_email
         }
     }
 }
@@ -52,14 +52,14 @@ def pomConfig = {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId project_artifact_id
+            artifactId proj_artifact_id
 
             pom{
                 packaging 'aar'
             }
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', project.desc)
+                root.appendNode('description', proj_desc)
                 root.children().last() + pomConfig
             }
         }
@@ -76,11 +76,11 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = project.name
-        desc = project.desc
-        websiteUrl = project.website.url
-        issueTrackerUrl = project.issuetracker.url
-        vcsUrl = project.vcs.url
+        name = proj_name
+        desc = proj_desc
+        websiteUrl = proj_website_url
+        issueTrackerUrl = proj_issuetracker_url
+        vcsUrl = proj_vcs_url
         licenses = ['Apache-2.0']
         publicDownloadNumbers = true
     }

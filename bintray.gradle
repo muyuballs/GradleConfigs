@@ -67,8 +67,8 @@ publishing {
 }
 
 bintray {
-    user = bintray_user
-    key = bintray_apikey
+    user = bintray.user
+    key = bintray.apikey
 
     configurations = ['archives']
     publications = ['mavenJava']
